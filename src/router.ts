@@ -1,6 +1,6 @@
 import express from "express"
 import { logError } from "./errorHandler"
-import { prismaGetAllFilms, prismaGetManyComments, prismaGetFilmPost, prismaCountLike, prismaDoILikeIt, prismaCreateComment, prismaDislike, prismaLike } from "./supabase"
+import { prismaGetAllFilms, prismaGetManyComments, prismaGetFilmPost, prismaCountLike, prismaDoILikeIt, prismaCreateComment, prismaDislike, prismaLike, prismaDeleteComment, prismaPutComment } from "./supabase"
 import { post_reaction } from "../generated/prisma"
 
 const router = express.Router()
@@ -66,6 +66,27 @@ router.post("/film-post/:filmPostId/like/customer/:customerId", async (req, res)
         } as post_reaction
 
         const result = await prismaLike(post_reaction)
+        res.status(200).json(result)
+    } catch (error) {
+        logError(error)
+    }
+})
+router.delete("/film-post/comment/:commentId", async (req, res) => {
+    try {
+        const commentIdString = req.params.commentId
+        const comment_id = Number(commentIdString)
+        const result = await prismaDeleteComment(comment_id)
+
+        res.status(200).json(result)
+    } catch (error) {
+        logError(error)
+    }
+})
+router.put("/film-post/comment/:commentId", async (req, res) => {
+    try {
+        const filmComment = req.body
+        console.log({filmComment})
+        const result = await prismaPutComment(filmComment)
         res.status(200).json(result)
     } catch (error) {
         logError(error)

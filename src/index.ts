@@ -8,7 +8,7 @@ app.use(express.text())
 
 const corsOptions: cors.CorsOptions = {
     origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
-    methods: ["OPTIONS", "GET", "POST", "DELETE"]
+    methods: ["OPTIONS", "GET", "POST", "DELETE", "PUT"]
 }
 app.use(cors(corsOptions))
 app.use("/film", router)

@@ -42,6 +42,7 @@ export const prismaLike = async (post_reaction: post_reaction) => {
         create: post_reaction
     })
 }
+
 export const prismaDislike = async (post_id: number, customer_id: number) => prisma.post_reaction.delete({
     where: {
         post_id_customer_id: {
@@ -49,4 +50,11 @@ export const prismaDislike = async (post_id: number, customer_id: number) => pri
             customer_id
         }
     }
+})
+
+export const prismaDeleteComment = async (comment_id: number) => prisma.film_comment.delete({ where: { comment_id } })
+
+export const prismaPutComment = async (film_comment: film_comment) => prisma.film_comment.update({
+    where: { comment_id: film_comment.comment_id },
+    data: film_comment
 })
