@@ -1,13 +1,12 @@
 import express from "express"
 import { logError } from "./errorHandler"
-import { prismaGetAllFilms } from "./supabase"
+import { prismaGetAllFilms, prismaGetManyComments, prismaGetFilmPost, prismaCountLike, prismaDoILikeIt } from "./supabase"
 
 const router = express.Router()
 
 router.get("/", async (req, res) => {
     try {
         const result = await prismaGetAllFilms()
-        console.log({result})
         res.status(200).json(result)
     } catch (error) {
         logError(error)
@@ -20,20 +19,38 @@ router.get("/:filmId", async (req, res) => {
         logError(error)
     }
 })
-router.get("/film-post/:filmPostId", async (req, res) => {
+router.get("/:filmId/film-post/customer/:customerId", async (req, res) => {
     try {
-        res.status(200).send("---- so far so good")
+        const filmIdString = req.params.filmId
+        const customerIdString = req.params.customerId
+        const film_id = Number(filmIdString)
+        const customer_id = Number(customerIdString)
+        const promiseArray = [] as Promise<any>[]
+
+        promiseArray.push(prismaGetFilmPost(film_id))
+        promiseArray.push(prismaGetManyComments(film_id))
+        promiseArray.push(prismaCountLike(film_id))
+        promiseArray.push(prismaDoILikeIt(film_id, customer_id))
+
+
+        const postCommentCountIlikeArray = await Promise.all(promiseArray)
+
+        res.status(200).json(postCommentCountIlikeArray)
     } catch (error) {
         logError(error)
     }
 })
-router.get("/film-post/:filmPostId/comment", async (req, res) => {
-    try {
-        res.status(200).send("---- so far so good")
-    } catch (error) {
-        logError(error)
-    }
-})
+// router.get("/film-post/:filmPostId/comment", async (req, res) => {
+//     try {
+//         const filmIdString = req.params.filmPostId
+//         const film_id = Number(filmIdString)
+//         const result = await prismaGetManyComments(film_id)
+//         console.log({result})
+//         res.status(200).send("---- so far so good")
+//     } catch (error) {
+//         logError(error)
+//     }
+// })
 router.post("/film-post/:filmPostId/comment", async (req, res) => {
     try {
         res.status(200).send("---- so far so good")
