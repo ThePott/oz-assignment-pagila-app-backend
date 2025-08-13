@@ -1,6 +1,6 @@
 import express from "express"
 import { logError } from "./errorHandler"
-import { prismaGetAllFilms, prismaGetManyComments, prismaGetFilmPost, prismaCountLike, prismaDoILikeIt } from "./supabase"
+import { prismaGetAllFilms, prismaGetManyComments, prismaGetFilmPost, prismaCountLike, prismaDoILikeIt, prismaCreateComment } from "./supabase"
 
 const router = express.Router()
 
@@ -8,13 +8,6 @@ router.get("/", async (req, res) => {
     try {
         const result = await prismaGetAllFilms()
         res.status(200).json(result)
-    } catch (error) {
-        logError(error)
-    }
-})
-router.get("/:filmId", async (req, res) => {
-    try {
-        res.status(200).send("---- so far so good")
     } catch (error) {
         logError(error)
     }
@@ -40,34 +33,12 @@ router.get("/:filmId/film-post/customer/:customerId", async (req, res) => {
         logError(error)
     }
 })
-// router.get("/film-post/:filmPostId/comment", async (req, res) => {
-//     try {
-//         const filmIdString = req.params.filmPostId
-//         const film_id = Number(filmIdString)
-//         const result = await prismaGetManyComments(film_id)
-//         console.log({result})
-//         res.status(200).send("---- so far so good")
-//     } catch (error) {
-//         logError(error)
-//     }
-// })
 router.post("/film-post/:filmPostId/comment", async (req, res) => {
     try {
-        res.status(200).send("---- so far so good")
-    } catch (error) {
-        logError(error)
-    }
-})
-router.get("/film-post/:filmPostId/like", async (req, res) => {
-    try {
-        res.status(200).send("---- so far so good")
-    } catch (error) {
-        logError(error)
-    }
-})
-router.get("/film-post/:filmPostId/like/customer/:customerId", async (req, res) => {
-    try {
-        res.status(200).send("---- so far so good")
+        const filmComment = req.body
+        console.log({filmComment})
+        const result = await prismaCreateComment(filmComment)
+        res.status(200).json(result)
     } catch (error) {
         logError(error)
     }

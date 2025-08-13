@@ -1,4 +1,4 @@
-import { PrismaClient } from "../generated/prisma";
+import { film_comment, PrismaClient } from "../generated/prisma";
 
 const prisma = new PrismaClient()
 
@@ -18,7 +18,13 @@ export const prismaCountLike = async (film_id: number) => await prisma.post_reac
     }
 })
 
-export const prismaDoILikeIt = async (film_id: number, customer_id: number) => prisma.post_reaction.findFirst({ where: { customer_id } })
+export const prismaDoILikeIt = async (film_id: number, customer_id: number) => prisma.post_reaction.findFirst({
+    where: {
+        customer_id,
+        film_post: { film_id }
+    }
+})
 
+export const prismaCreateComment = async (film_comment: film_comment) => prisma.film_comment.create({ data: film_comment })
 // export const prismaGetLikeCount = async(post
 
