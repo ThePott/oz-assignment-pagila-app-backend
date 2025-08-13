@@ -1,11 +1,14 @@
 import express from "express"
 import { logError } from "./errorHandler"
+import { prismaGetAllFilms } from "./supabase"
 
 const router = express.Router()
 
 router.get("/", async (req, res) => {
     try {
-        res.status(200).send("---- so far so good")
+        const result = await prismaGetAllFilms()
+        console.log({result})
+        res.status(200).json(result)
     } catch (error) {
         logError(error)
     }

@@ -11,8 +11,8 @@ const corsOptions: cors.CorsOptions = {
     methods: ["OPTIONS", "GET", "POST", "DELETE"]
 }
 app.use(cors(corsOptions))
-app.use("/", (req, res) => res.send("---- welcome"))
 app.use("/film", router)
+app.use("/", (req, res) => res.send("---- welcome"))
 
 
 const PORT = process.env.PORT || 3939
